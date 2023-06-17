@@ -50,8 +50,16 @@ const onComplete = () => {
   revealed.value = true
 }
 
-const url = `${config.public.opepenApi}/accounts/${address.value}/sets/${props.set.id}`
-const { data: subscription, refresh } = await useLazyFetch(url)
+const { data: subscription, refresh } = await useLazyAsyncData(
+  'set',
+  () =>
+    $fetch(
+      `${config.public.opepenApi}/accounts/${address.value}/sets/${props.set.id}`
+    ),
+  {
+    watch: [address],
+  }
+);
 
 const optInOpen = ref(false)
 watch(optInOpen, () => {
